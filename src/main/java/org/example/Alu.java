@@ -8,7 +8,8 @@ public class Alu {
     private int operand1 = -1;
     private int operand2 = -1;
     private final Map<String, BiFunction<Integer, Integer, Integer>> OPMAP = new HashMap<>();
-    private BiFunction<Integer, Integer, Integer> SELECTED_OP = null;
+    private BiFunction<Integer, Integer, Integer> calculator = null;
+    private boolean isSelectedCalculator = false;
 
     public Alu() {
         OPMAP.put("ADD", Integer::sum);
@@ -25,41 +26,42 @@ public class Alu {
     }
 
     public void setOPCODE(String OPCODE) {
-        this.SELECTED_OP = OPMAP.get(OPCODE.toUpperCase());
+        this.isSelectedCalculator = OPMAP.containsKey(OPCODE);
+        this.calculator = OPMAP.get(OPCODE.toUpperCase());
     }
 
     public void enableSignal(Result r) {
-        if (isInvalidOperand(r)){
+        if (!isValidOperands(r)){
             return;
         }
 
-        int result = this.SELECTED_OP.apply(operand1, operand2);
+        int result = this.calculator.apply(operand1, operand2);
         int resultCode = AluResultCode.SUCCESS;
 
         setAluResult(r, result);
         setAluStatus(r, resultCode);
     }
 
-    private boolean isInvalidOperand(Result r) {
-        if (this.SELECTED_OP == null) {
+    private boolean isValidOperands(Result r) {
+        if (!this.isSelectedCalculator) {
             setAluResult(r, AluResultCode.NO_RESULT);
             setAluStatus(r, AluResultCode.NOT_SELECTED_OPERAND_CODE);
-            return true;
+            return false;
         }
-        if (isInvalidValue(this.operand1)) {
+        if (isMinus(this.operand1)) {
             setAluResult(r, AluResultCode.NO_RESULT);
             setAluStatus(r, AluResultCode.INVALID_OPERAND_1);
-            return true;
+            return false;
         }
-        if (isInvalidValue(this.operand2)) {
+        if (isMinus(this.operand2)) {
             setAluResult(r, AluResultCode.NO_RESULT);
             setAluStatus(r, AluResultCode.INVALID_OPERAND_2);
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
 
-    private boolean isInvalidValue(int operand) {
+    private boolean isMinus(int operand) {
         return operand == -1;
     }
 
