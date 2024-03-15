@@ -54,10 +54,6 @@ public class Alu {
         setAluStatus(r, resultCode);
     }
 
-    private BiFunction<Integer, Integer, Integer> getCalculator(String OPCODE) {
-        return this.OPMAP.get(OPCODE.toUpperCase());
-    }
-
     private boolean isValidOperands(Result r) {
         if (!this.isExistOp) {
             setAluResult(r, AluResultCode.NO_RESULT);
@@ -75,6 +71,10 @@ public class Alu {
             return false;
         }
         return true;
+    }
+
+    private BiFunction<Integer, Integer, Integer> getCalculator(String OPCODE) {
+        return this.OPMAP.get(OPCODE.toUpperCase());
     }
 
     private boolean isMinus(int operand) {
