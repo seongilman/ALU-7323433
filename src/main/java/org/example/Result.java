@@ -1,8 +1,8 @@
 package org.example;
 
 public class Result {
-    private int status = -1;
-    private int result = 65535;
+    private int status = AluResultCode.FAIL;
+    private int result = AluResultCode.NO_RESULT;
 
     //status -1 : 결과 안나옴
     //status 0 : 성공
