@@ -7,9 +7,10 @@ import java.util.function.BiFunction;
 public class Alu {
     private int operand1 = -1;
     private int operand2 = -1;
-    private static final Map<String, BiFunction<Integer, Integer, Integer>> OPMAP = new HashMap<>();
+    private final Map<String, BiFunction<Integer, Integer, Integer>> OPMAP = new HashMap<>();
     private BiFunction<Integer, Integer, Integer> SELECTED_OP = null;
-    static {
+
+    public Alu() {
         OPMAP.put("ADD", Integer::sum);
         OPMAP.put("MUL", (a, b) -> a * b);
         OPMAP.put("SUB", (a, b) -> a - b);
@@ -30,7 +31,7 @@ public class Alu {
     public void enableSignal(Result r) {
         if (this.SELECTED_OP == null) {
             setAluResult(r, AluResultCode.NO_RESULT);
-            setAluStatus(r, AluResultCode.INVALID_OPERAND_CODE);
+            setAluStatus(r, AluResultCode.NOT_SELECTED_OPERAND_CODE);
             return;
         }
 
