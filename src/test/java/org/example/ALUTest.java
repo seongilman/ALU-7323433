@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class AluTest {
 
     @Test
-    void 정상적인계산테스트() {
+    void 정상적인_계산테스트() {
         String OPCODE[] = {"ADD","SUB","MUL"};
         Integer results[] = {10, 4, 21};
         for(int i = 0 ; i < 3; i ++) {

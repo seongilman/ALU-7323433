@@ -7,9 +7,9 @@ import java.util.function.BiFunction;
 public class Alu {
     private int operand1 = -1;
     private int operand2 = -1;
+    private String OPCODE = "";
     private final Map<String, BiFunction<Integer, Integer, Integer>> OPMAP = new HashMap<>();
-    private BiFunction<Integer, Integer, Integer> calculator = null;
-    private boolean isSelectedCalculator = false;
+    private boolean isExistOp = false;
 
     public Alu() {
         OPMAP.put("ADD", Integer::sum);
@@ -26,8 +26,8 @@ public class Alu {
     }
 
     public void setOPCODE(String OPCODE) {
-        this.isSelectedCalculator = OPMAP.containsKey(OPCODE);
-        this.calculator = OPMAP.get(OPCODE.toUpperCase());
+        this.OPCODE = OPCODE;
+        this.isExistOp = OPMAP.containsKey(OPCODE);
     }
 
     public void enableSignal(Result r) {
@@ -35,15 +35,19 @@ public class Alu {
             return;
         }
 
-        int result = this.calculator.apply(operand1, operand2);
+        int result = getCalculator(OPCODE).apply(operand1, operand2);
         int resultCode = AluResultCode.SUCCESS;
 
         setAluResult(r, result);
         setAluStatus(r, resultCode);
     }
 
+    private BiFunction<Integer, Integer, Integer> getCalculator(String OPCODE) {
+        return this.OPMAP.get(OPCODE.toUpperCase());
+    }
+
     private boolean isValidOperands(Result r) {
-        if (!this.isSelectedCalculator) {
+        if (!this.isExistOp) {
             setAluResult(r, AluResultCode.NO_RESULT);
             setAluStatus(r, AluResultCode.NOT_SELECTED_OPERAND_CODE);
             return false;
