@@ -4,6 +4,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiFunction;
 
+class AluResultCode {
+    public static int FAIL = -1;
+    public static int SUCCESS = 0;
+    public static int NO_RESULT = 65535;
+}
+
+class AluStatusCode {
+    public static int INVALID_OPERAND_1 = 1;
+    public static int INVALID_OPERAND_2 = 2;
+    public static int NOT_SELECTED_OP_CODE = 3;
+}
+
 public class Alu {
     private int operand1 = -1;
     private int operand2 = -1;
@@ -49,17 +61,17 @@ public class Alu {
     private boolean isValidOperands(Result r) {
         if (!this.isExistOp) {
             setAluResult(r, AluResultCode.NO_RESULT);
-            setAluStatus(r, AluResultCode.NOT_SELECTED_OPERAND_CODE);
+            setAluStatus(r, AluStatusCode.NOT_SELECTED_OP_CODE);
             return false;
         }
         if (isMinus(this.operand1)) {
             setAluResult(r, AluResultCode.NO_RESULT);
-            setAluStatus(r, AluResultCode.INVALID_OPERAND_1);
+            setAluStatus(r, AluStatusCode.INVALID_OPERAND_1);
             return false;
         }
         if (isMinus(this.operand2)) {
             setAluResult(r, AluResultCode.NO_RESULT);
-            setAluStatus(r, AluResultCode.INVALID_OPERAND_2);
+            setAluStatus(r, AluStatusCode.INVALID_OPERAND_2);
             return false;
         }
         return true;
