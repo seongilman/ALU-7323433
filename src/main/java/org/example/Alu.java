@@ -29,33 +29,38 @@ public class Alu {
     }
 
     public void enableSignal(Result r) {
-        if (this.SELECTED_OP == null) {
-            setAluResult(r, AluResultCode.NO_RESULT);
-            setAluStatus(r, AluResultCode.NOT_SELECTED_OPERAND_CODE);
+        if (isInvalidOperand(r)){
             return;
         }
 
-        int result = AluResultCode.NO_RESULT;
-        int resultCode = 0;
-        if (isValidOperand(operand1, operand2)) {
-            result = this.SELECTED_OP.apply(operand1, operand2);
-            resultCode = AluResultCode.SUCCESS;
-        } else if (!isValidOperand(operand1)) {
-            resultCode = AluResultCode.INVALID_OPERAND_1;
-        } else if (!isValidOperand(operand2)) {
-            resultCode = AluResultCode.INVALID_OPERAND_2;
-        }
+        int result = this.SELECTED_OP.apply(operand1, operand2);
+        int resultCode = AluResultCode.SUCCESS;
 
         setAluResult(r, result);
         setAluStatus(r, resultCode);
     }
 
-    private boolean isValidOperand(int operand1, int operand2) {
-        return isValidOperand(operand1) && isValidOperand(operand2);
+    private boolean isInvalidOperand(Result r) {
+        if (this.SELECTED_OP == null) {
+            setAluResult(r, AluResultCode.NO_RESULT);
+            setAluStatus(r, AluResultCode.NOT_SELECTED_OPERAND_CODE);
+            return true;
+        }
+        if (isInvalidValue(this.operand1)) {
+            setAluResult(r, AluResultCode.NO_RESULT);
+            setAluStatus(r, AluResultCode.INVALID_OPERAND_1);
+            return true;
+        }
+        if (isInvalidValue(this.operand2)) {
+            setAluResult(r, AluResultCode.NO_RESULT);
+            setAluStatus(r, AluResultCode.INVALID_OPERAND_2);
+            return true;
+        }
+        return false;
     }
 
-    private boolean isValidOperand(int operand) {
-        return operand != -1;
+    private boolean isInvalidValue(int operand) {
+        return operand == -1;
     }
 
     private void setAluResult(Result r, int result) {
